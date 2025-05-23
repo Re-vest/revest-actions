@@ -1,0 +1,15 @@
+Relatório de Vendas e Eventos
+
+=== Produtos Vendidos ===
+ID;Categoria;Nome;Preço;Descrição
+2;ROUPA;Calça Jeans;79,90;Calça jeans confortável
+
+=== Resumo ===
+Quantidade de Produtos Vendidos: 1
+Valor Total Arrecadado: 79,90
+Categoria Mais Vendida: Calça (1 vendas)
+
+=== Eventos ===
+ID;Nome;Descrição;Data de Início;Data de Fim
+1;evento 01;evento de teste antecipado;2020-10-10;2020-10-20
+2;evento 02;evento de teste beta;2020-11-10;2020-11-20
