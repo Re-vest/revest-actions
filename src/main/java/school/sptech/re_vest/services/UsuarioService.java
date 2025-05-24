@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import school.sptech.re_vest.api.configuration.security.jwt.GerenciadorTokenJwt;
 import school.sptech.re_vest.domain.Usuario;
 import school.sptech.re_vest.dto.Usuario.UsuarioMapper;
-import school.sptech.re_vest.dto.Usuario.UsuarioRequestDto;
 import school.sptech.re_vest.exception.CredenciaisInvalidasException;
 import school.sptech.re_vest.exception.EmailJaCadastradoException;
 import school.sptech.re_vest.exception.EntidadeNaoEncontradaException;
@@ -44,14 +43,14 @@ public class UsuarioService {
     }
 
     public Usuario criar(Usuario novoUsuario){
-        String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
-        novoUsuario.setSenha(senhaCriptografada);
-
         Optional<Usuario> existente = usuarioRepository.findByEmail(novoUsuario.getEmail());
 
         if (existente.isPresent()){
             throw new EmailJaCadastradoException();
         }
+
+        String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
+        novoUsuario.setSenha(senhaCriptografada);
 
         return usuarioRepository.save(novoUsuario);
     }
