@@ -74,8 +74,17 @@ public class UsuarioController {
             description = "endpoint PUT que atualiza um usuário existente pelo ID"
     )
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> atualizar(@PathVariable Integer id, @RequestBody UsuarioRequestDto usuarioRequestDto) {
+    public ResponseEntity<UsuarioResponseDto> atualizar(
+            @PathVariable Integer id,
+            @RequestBody UsuarioRequestDto usuarioRequestDto) {
+
+        Usuario usuarioExistente = usuarioService.buscarPorId(id);
+
         Usuario usuarioEntity = UsuarioMapper.toUsuarioEntity(usuarioRequestDto);
+
+        if (usuarioRequestDto.getSenha() == null || usuarioRequestDto.getSenha().isBlank()) {
+            usuarioEntity.setSenha(usuarioExistente.getSenha());
+        }
 
         Usuario usuarioAtualizado = usuarioService.atualizar(id, usuarioEntity);
 
@@ -83,6 +92,7 @@ public class UsuarioController {
 
         return ResponseEntity.ok(usuarioResponseDto);
     }
+
 
     @Operation(
             summary = "deletar um usuário",
