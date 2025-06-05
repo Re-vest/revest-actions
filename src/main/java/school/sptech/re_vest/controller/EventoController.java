@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.re_vest.domain.Evento;
+import school.sptech.re_vest.domain.Usuario;
 import school.sptech.re_vest.dto.Evento.EventoMapper;
 import school.sptech.re_vest.dto.Evento.EventoRequestDto;
 import school.sptech.re_vest.dto.Evento.EventoResponseDto;
 import school.sptech.re_vest.services.EventoService;
 import school.sptech.re_vest.services.HistoricoService;
+import school.sptech.re_vest.services.UsuarioService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class EventoController {
     private final EventoService eventoService;
     private final HistoricoService historicoService;
+    private final UsuarioService usuarioService;
 
     @Operation(
             summary = "buscar todos os eventos",
@@ -49,8 +52,13 @@ public class EventoController {
         eventoService.criar(evento);
         EventoResponseDto dto = EventoMapper.toEventoResponseDto(evento);
 
-        historicoService.registrarHistorico(idUsuario, "Criação de evento");
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
 
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Evento criado"
+        );
         return ResponseEntity.status(201).body(dto);
     }
 
@@ -67,8 +75,13 @@ public class EventoController {
         Evento eventoAtualizado = eventoService.editar(id, EventoMapper.toEventoEntity(eventoRequestDto));
         EventoResponseDto dto = EventoMapper.toEventoResponseDto(eventoAtualizado);
 
-        historicoService.registrarHistorico(idUsuario, "Atualização de evento");
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
 
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Evento atualizado"
+        );
         return ResponseEntity.status(201).body(dto);
     }
 
@@ -78,10 +91,14 @@ public class EventoController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam("idUsuario") Integer idUsuario) {
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
+
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Evento deletado");
+
         eventoService.deletar(id);
-
-        historicoService.registrarHistorico(idUsuario, "Exclusão de evento");
-
         return ResponseEntity.status(204).build();
     }
 

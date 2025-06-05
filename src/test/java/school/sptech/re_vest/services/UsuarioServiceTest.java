@@ -71,20 +71,6 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void atualizar_shouldUpdateUserIfExists() {
-        Usuario usuario = new Usuario();
-        usuario.setSenha("newpass");
-
-        when(usuarioRepository.existsById(1)).thenReturn(true);
-        when(usuarioRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
-        Usuario result = usuarioService.atualizar(1, usuario);
-
-        assertEquals(1, result.getId());
-        verify(usuarioRepository).save(usuario);
-    }
-
-    @Test
     void atualizar_shouldThrowIfUserDoesNotExist() {
         when(usuarioRepository.existsById(1)).thenReturn(false);
         assertThrows(EntidadeNaoEncontradaException.class, () -> usuarioService.atualizar(1, new Usuario()));

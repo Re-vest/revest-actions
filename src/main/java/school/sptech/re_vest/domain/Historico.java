@@ -17,6 +17,7 @@ public class Historico {
     private Integer id;
     @Column(name = "fkusuario")
     private Integer idUsuario;
+    private String nomeUsuario;
     private String acao;
     @Column(name = "datahora")
     private LocalDateTime dataHora;
