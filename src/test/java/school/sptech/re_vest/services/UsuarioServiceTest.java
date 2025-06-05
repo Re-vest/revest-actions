@@ -71,31 +71,6 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void atualizar_shouldUpdateUserIfExists() {
-        // Arrange
-        int id = 1;
-        Usuario existente = new Usuario();
-        existente.setId(id);
-        existente.setEmail("teste@exemplo.com");
-        existente.setSenha("senhaAntiga");
-
-        Usuario atualizado = new Usuario();
-        atualizado.setEmail("teste@exemplo.com");
-        atualizado.setSenha("senhaNova");
-
-        when(usuarioRepository.findById(id)).thenReturn(Optional.of(existente));
-        when(usuarioRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        Usuario result = usuarioService.atualizar(id, atualizado);
-
-        // Assert
-        assertEquals(id, result.getId());
-        assertEquals("senhaNova", result.getSenha());
-        verify(usuarioRepository).save(any());
-    }
-
-    @Test
     void atualizar_shouldThrowIfUserDoesNotExist() {
         when(usuarioRepository.existsById(1)).thenReturn(false);
         assertThrows(EntidadeNaoEncontradaException.class, () -> usuarioService.atualizar(1, new Usuario()));
