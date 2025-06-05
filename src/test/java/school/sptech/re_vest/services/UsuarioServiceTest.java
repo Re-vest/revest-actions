@@ -72,16 +72,27 @@ class UsuarioServiceTest {
 
     @Test
     void atualizar_shouldUpdateUserIfExists() {
-        Usuario usuario = new Usuario();
-        usuario.setSenha("newpass");
+        // Arrange
+        int id = 1;
+        Usuario existente = new Usuario();
+        existente.setId(id);
+        existente.setEmail("teste@exemplo.com");
+        existente.setSenha("senhaAntiga");
 
-        when(usuarioRepository.existsById(1)).thenReturn(true);
-        when(usuarioRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        Usuario atualizado = new Usuario();
+        atualizado.setEmail("teste@exemplo.com");
+        atualizado.setSenha("senhaNova");
 
-        Usuario result = usuarioService.atualizar(1, usuario);
+        when(usuarioRepository.findById(id)).thenReturn(Optional.of(existente));
+        when(usuarioRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertEquals(1, result.getId());
-        verify(usuarioRepository).save(usuario);
+        // Act
+        Usuario result = usuarioService.atualizar(id, atualizado);
+
+        // Assert
+        assertEquals(id, result.getId());
+        assertEquals("senhaNova", result.getSenha());
+        verify(usuarioRepository).save(any());
     }
 
     @Test
