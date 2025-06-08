@@ -55,18 +55,21 @@ public class UsuarioService {
         return usuarioRepository.save(novoUsuario);
     }
 
-    public Usuario atualizar(Integer id, Usuario usuarioAtualizado){
+    public Usuario atualizar(Integer id, Usuario usuarioAtualizado) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário de id: " + id));
 
         usuarioAtualizado.setId(id);
 
-        if (!passwordEncoder.matches(usuarioAtualizado.getSenha(), usuarioExistente.getSenha())) {
+        if (usuarioAtualizado.getSenha() == null || usuarioAtualizado.getSenha().isBlank()) {
+            usuarioAtualizado.setSenha(usuarioExistente.getSenha());
+        } else if (!passwordEncoder.matches(usuarioAtualizado.getSenha(), usuarioExistente.getSenha())) {
             String senhaCriptografada = passwordEncoder.encode(usuarioAtualizado.getSenha());
             usuarioAtualizado.setSenha(senhaCriptografada);
         } else {
-            usuarioAtualizado.setSenha(usuarioExistente.getSenha()); // mantém a senha antiga criptografada
+            usuarioAtualizado.setSenha(usuarioExistente.getSenha());
         }
+
         return usuarioRepository.save(usuarioAtualizado);
     }
 

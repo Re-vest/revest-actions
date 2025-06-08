@@ -53,7 +53,7 @@ public class VendaController {
             description = "endpoint POST que cria uma nova venda no banco de dados"
     )
     @PostMapping
-    public ResponseEntity<VendaResponseDto> cadastrarVenda(@RequestBody VendaRequestDto vendaRequestDto, @RequestParam("idUsuario") Integer idUsuario, @RequestParam("nomeUsuario") String nomeUsuario) {
+    public ResponseEntity<VendaResponseDto> cadastrarVenda(@RequestBody VendaRequestDto vendaRequestDto, @RequestParam("idUsuario") Integer idUsuario) {
         List<Produto> produtosBuscados = vendaRequestDto.getProdutosId().stream()
                 .map(produtoService::buscarPorId)
                 .toList();
