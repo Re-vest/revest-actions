@@ -53,7 +53,7 @@ public class VendaController {
             description = "endpoint POST que cria uma nova venda no banco de dados"
     )
     @PostMapping
-    public ResponseEntity<VendaResponseDto> cadastrarVenda(@RequestBody VendaRequestDto vendaRequestDto, @RequestParam("idUsuario") Integer idUsuario) {
+    public ResponseEntity<VendaResponseDto> cadastrarVenda(@RequestBody VendaRequestDto vendaRequestDto, @RequestParam("idUsuario") Integer idUsuario, @RequestParam("nomeUsuario") String nomeUsuario) {
         List<Produto> produtosBuscados = vendaRequestDto.getProdutosId().stream()
                 .map(produtoService::buscarPorId)
                 .toList();
@@ -71,11 +71,15 @@ public class VendaController {
         Venda venda = vendaService.salvar(vendaEntity);
         VendaResponseDto dto = VendaMapper.toVendaResponseDto(venda);
 
-        historicoService.registrarHistorico(idUsuario, "Venda efetuada");
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
+
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Venda realizada"
+        );
 
         return ResponseEntity.status(200).body(dto);
-
-        // return ResponseEntity.status(200).body(VendaMapper.toVendaResponseDto(vendaService.salvar(VendaMapper.toVendaEntity(vendaRequestDto, vendaRequestDto.getProdutosId().stream().map(produtoService::buscarPorId).toList()))));
     }
 
     @Operation(
@@ -131,7 +135,7 @@ public class VendaController {
         if (valorTotalVendas == 0.0) {
             return ResponseEntity.noContent().build();
         }
-            return ResponseEntity.ok(valorTotalVendas);
+        return ResponseEntity.ok(valorTotalVendas);
     }
 
     @Operation(

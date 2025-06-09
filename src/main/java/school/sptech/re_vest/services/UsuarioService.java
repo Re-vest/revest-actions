@@ -55,19 +55,22 @@ public class UsuarioService {
         return usuarioRepository.save(novoUsuario);
     }
 
-    public Usuario atualizar(Integer id, Usuario usuarioAtualizado){
-        if (usuarioRepository.existsById(id)){
-            usuarioAtualizado.setId(id);
-            return usuarioRepository.save(usuarioAtualizado);
-        }
-        throw new EntidadeNaoEncontradaException("Usuario");
-    }
+    public Usuario atualizar(Integer id, Usuario usuarioAtualizado) {
+        Usuario usuarioExistente = buscarPorId(id);
 
-    public void deletar(Integer id){
-        if (!usuarioRepository.existsById(id)){
-            throw new EntidadeNaoEncontradaException("Usuario");
+        usuarioExistente.setNome(usuarioAtualizado.getNome());
+        usuarioExistente.setEmail(usuarioAtualizado.getEmail());
+
+        if (
+                usuarioAtualizado.getSenha() != null &&
+                        usuarioAtualizado.getSenha() != "" &&
+                        !passwordEncoder.matches(usuarioAtualizado.getSenha(), usuarioExistente.getSenha())
+        ) {
+            String senhaCriptografada = passwordEncoder.encode(usuarioAtualizado.getSenha());
+            usuarioExistente.setSenha(senhaCriptografada);
         }
-        usuarioRepository.deleteById(id);
+
+        return usuarioRepository.save(usuarioExistente);
     }
 
     public Usuario buscarPorId(Integer id){
@@ -92,5 +95,10 @@ public class UsuarioService {
         } catch (BadCredentialsException ex) {
             throw new CredenciaisInvalidasException();
         }
+    }
+
+    public void deletar(Integer id) {
+        buscarPorId(id);
+        usuarioRepository.deleteById(id);
     }
 }

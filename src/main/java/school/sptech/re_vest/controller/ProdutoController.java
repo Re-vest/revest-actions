@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import school.sptech.re_vest.domain.Imagem;
+import school.sptech.re_vest.domain.Usuario;
 import school.sptech.re_vest.dto.Produto.ProdutoMapper;
 import school.sptech.re_vest.dto.Produto.ProdutoRequestDto;
 import school.sptech.re_vest.dto.Produto.ProdutoResponseDto;
@@ -18,6 +19,7 @@ import school.sptech.re_vest.dto.Produto.VendidosPorDiaDTO;
 import school.sptech.re_vest.services.ImagemService;
 import school.sptech.re_vest.services.HistoricoService;
 import school.sptech.re_vest.services.ProdutoService;
+import school.sptech.re_vest.services.UsuarioService;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class ProdutoController {
     private final ProdutoService produtoService;
     private final ImagemService imagemService;
     private final HistoricoService historicoService;
+    private final UsuarioService usuarioService;
 
     @Operation(
             summary = "lista todos os produtos",
@@ -117,8 +120,12 @@ public class ProdutoController {
 
         ProdutoResponseDto produtoParaRetornar = ProdutoMapper.toProdutoResponseDto(produtoSalvoNoBanco);
 
-        historicoService.registrarHistorico(idUsuario, "Criação de Produto: " +produtoParaRetornar.getNome());
-
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Produto criado"
+        );
         return ResponseEntity.status(201).body(produtoParaRetornar);
     }
 
@@ -147,7 +154,13 @@ public class ProdutoController {
 
         ProdutoResponseDto produtoResponseDto = ProdutoMapper.toProdutoResponseDto(produtoAtualizado);
 
-        historicoService.registrarHistorico(idUsuario, "Edição de " + produtoRequestDto.getTipo());
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
+
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Produto atualizado"
+        );
         return ResponseEntity.ok(produtoResponseDto);
     }
 
@@ -157,8 +170,16 @@ public class ProdutoController {
     )
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id, @RequestParam ("idUsuario") Integer idUsuario){
+        Usuario usuario = usuarioService.buscarPorId(idUsuario);
+
+        historicoService.registrarHistorico(
+                usuario.getId(),
+                usuario.getNome(),
+                "Produto deletado"
+        );
+
         produtoService.deletar(id);
-        historicoService.registrarHistorico(idUsuario, "Exclusão de produto");
+
         return ResponseEntity.status(204).build();
     }
 }
