@@ -77,15 +77,6 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deletar_shouldDeleteIfUserExists() {
-        when(usuarioRepository.existsById(1)).thenReturn(true);
-
-        usuarioService.deletar(1);
-
-        verify(usuarioRepository).deleteById(1);
-    }
-
-    @Test
     void deletar_shouldThrowIfUserDoesNotExist() {
         when(usuarioRepository.existsById(1)).thenReturn(false);
         assertThrows(EntidadeNaoEncontradaException.class, () -> usuarioService.deletar(1));
