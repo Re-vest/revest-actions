@@ -78,21 +78,12 @@ public class UsuarioController {
             @PathVariable Integer id,
             @RequestBody UsuarioRequestDto usuarioRequestDto) {
 
-        Usuario usuarioExistente = usuarioService.buscarPorId(id);
-
         Usuario usuarioEntity = UsuarioMapper.toUsuarioEntity(usuarioRequestDto);
-
-        if (usuarioRequestDto.getSenha() == null || usuarioRequestDto.getSenha().isBlank()) {
-            usuarioEntity.setSenha(usuarioExistente.getSenha());
-        }
-
         Usuario usuarioAtualizado = usuarioService.atualizar(id, usuarioEntity);
-
         UsuarioResponseDto usuarioResponseDto = UsuarioMapper.toUsuarioResponseDto(usuarioAtualizado);
 
         return ResponseEntity.ok(usuarioResponseDto);
     }
-
 
     @Operation(
             summary = "deletar um usuário",

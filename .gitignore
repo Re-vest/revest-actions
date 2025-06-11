@@ -8,6 +8,9 @@ target/
 .env
 re-vest/.env
 
+src/main/resources/application.properties
+./Dockerfile
+
 ### STS ###
 .apt_generated
 .classpath

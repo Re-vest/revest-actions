@@ -80,7 +80,9 @@ public class ProdutoService {
 
     public void deletar(Integer id){
         Produto produto = produtoRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Produto"));
-        imagemService.deletar(produto.getImagem().getId());
+        if (produto.getImagem() != null) {
+            imagemService.deletar(produto.getImagem().getId());
+        }
         produtoRepository.deleteById(id);
     }
 
