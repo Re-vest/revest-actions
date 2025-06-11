@@ -31,6 +31,7 @@ public class ProdutoMapper {
         produto.setCondicao(dto.getCondicao());
         produto.setStatus(dto.getStatus());
         produto.setCategoria(dto.getCategoria());
+        produto.setImagem(dto.getImagem());
 
         return produto;
     }
