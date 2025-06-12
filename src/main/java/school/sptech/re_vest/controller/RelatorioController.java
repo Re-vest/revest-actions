@@ -96,8 +96,8 @@ public class RelatorioController {
             Long quantidadeVendasDia = diaComMaisVendasEntry != null ? diaComMaisVendasEntry.getValue() : 0;
             // Cabeçalho
             document.add(new Paragraph("Bazar Batista Betel").setFont(boldFont).setFontSize(18).setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("Rua das Flores, 123 – São Paulo/SP").setFontSize(11).setTextAlignment(TextAlignment.CENTER));
-            document.add(new Paragraph("Contato: (11) 99999-9999 | bazar@batistabetel.org.br").setFontSize(11).setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Avenida Souza Ramos, 513 - Guaianases").setFontSize(11).setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Contato: (11)97836-4836 | deaninialexandra@gmail.com").setFontSize(11).setTextAlignment(TextAlignment.CENTER));
             document.add(new LineSeparator(new SolidLine(1)));
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("Relatório de Vendas e Eventos - " + mesFormatado)
